@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vote
+  labels:
+    app: python
+    role: vote
+    version: v1
+  annotations:
+    linkerd.io/inject: enabled
+  namespace: instavote
+spec:
+  containers:
+    - name: app
+      image: majetraining/vote:v1
+      #envFrom:
+      #  - configMapRef:
+      #      name: vote
+      ports:
+        - containerPort: 80
+          protocol: TCP

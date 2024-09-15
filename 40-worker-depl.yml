@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: instavote
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: back
+      role: worker
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        name: worker
+        app: java
+        role: worker
+        tier: back
+        version: latest
+    spec:
+      containers:
+        - image: majetraining/vote-worker:latest
+          imagePullPolicy: Always
+          name: worker

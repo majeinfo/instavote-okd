@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: instavote
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+        role: database
+      annotations:
+        linkerd.io/inject: enabled
+        #openshift.io/required-scc: instavote-restricted
+    spec:
+      #serviceAccountName: postgres
+      containers:
+        - name: postgres
+          image: postgres:9.4
+          env:
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: "trust"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+          ports:
+            - containerPort: 5432
+          #securityContext:
+          #  capabilities:
+          #    add: 
+          #      - CHOWN
+          volumeMounts:
+            # Postgres ne veut pas trouver lost+found sous ./data !
+            - mountPath: /var/lib/postgresql/data
+              name: postgredb
+      volumes:
+        - name: postgredb
+          #persistentVolumeClaim:
+          #  claimName: postgres-pv-claim
+          #awsElasticBlockStore:
+          #  volumeID: vol-019e44a8e1c76eb67
+          #  fsType: xfs
+          emptyDir: {}

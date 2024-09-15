@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: results
+  namespace: instavote
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  revisionHistoryLimit: 4
+  paused: false
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      tier: front
+      role: results
+  template:
+    metadata:
+      name: results
+      labels:
+        app: node
+        role: results
+        tier: front
+        version: latest
+    spec:
+      containers:
+        - image: majetraining/vote-result:latest
+          imagePullPolicy: Always
+          name: results
+          env:
+            - name: PORT
+              #value: "8080"
+              value: "80"
+          ports:
+            #- containerPort: 8080
+            - containerPort: 80
+              protocol: TCP
+      restartPolicy: Always
+      serviceAccountName: instavote-sa
