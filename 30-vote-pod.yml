@@ -12,10 +12,10 @@ metadata:
 spec:
   containers:
     - name: app
-      image: majetraining/vote:v1
-      #envFrom:
-      #  - configMapRef:
-      #      name: vote
+      image: majetraining/vote:v2
+      envFrom:
+        - configMapRef:
+            name: vote
       ports:
         - containerPort: 80
           protocol: TCP
