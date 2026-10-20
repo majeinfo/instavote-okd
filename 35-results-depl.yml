@@ -39,4 +39,4 @@ spec:
             - containerPort: 80
               protocol: TCP
       restartPolicy: Always
-      serviceAccountName: instavote-sa
+      #serviceAccountName: instavote-sa
